@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# extracted zip contents (not source of truth)
+/extracted/
+
+# encrypted subscriber data
+/data/

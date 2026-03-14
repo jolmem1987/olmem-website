@@ -36,5 +36,5 @@ export function getClientLoginUrl(clientId: string = 'default'): string {
 
 // Helper function to get dashboard URL for a client
 export function getClientDashboardUrl(clientId: string = 'default'): string {
-  return clientSites[clientId]?.dashboardUrl || clientSites.default.dashboardUrl;
+  return clientSites[clientId]?.dashboardUrl ?? clientSites.default.dashboardUrl ?? "";
 }

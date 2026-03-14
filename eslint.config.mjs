@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Extracted zip contents are not source of truth
+    "extracted/**",
   ]),
 ]);
 

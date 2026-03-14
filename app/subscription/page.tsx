@@ -156,6 +156,11 @@ export default function SubscriptionPage() {
       return;
     }
 
+    if (password && password.length < 8) {
+      setMessage("Password must be at least 8 characters.");
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -443,6 +448,21 @@ export default function SubscriptionPage() {
                     setLogoBase64(null);
                     return;
                   }
+
+                  const allowedTypes = ["image/png", "image/jpeg", "image/gif", "image/webp", "image/svg+xml"];
+                  if (!allowedTypes.includes(file.type)) {
+                    setMessage("Logo must be a PNG, JPG, GIF, WebP, or SVG image.");
+                    e.target.value = "";
+                    return;
+                  }
+
+                  const MAX_SIZE_BYTES = 5 * 1024 * 1024; // 5 MB
+                  if (file.size > MAX_SIZE_BYTES) {
+                    setMessage("Logo file is too large. Maximum size is 5 MB.");
+                    e.target.value = "";
+                    return;
+                  }
+
                   setLogoName(file.name);
 
                   const reader = new FileReader();

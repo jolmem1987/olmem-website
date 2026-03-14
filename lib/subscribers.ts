@@ -1,4 +1,4 @@
-import { randomBytes, createCipheriv, createDecipheriv, scryptSync } from "crypto";
+import { randomBytes, createCipheriv, createDecipheriv, scryptSync, timingSafeEqual } from "crypto";
 import { promises as fs } from "fs";
 import path from "path";
 
@@ -80,8 +80,8 @@ export async function readSubscribers(): Promise<Subscriber[]> {
     const data = JSON.parse(json);
     if (!Array.isArray(data)) return [];
     return data;
-  } catch (err: any) {
-    if (err.code === "ENOENT") return [];
+  } catch (err: unknown) {
+    if ((err as NodeJS.ErrnoException).code === "ENOENT") return [];
     // if the file is corrupted or key mismatch, throw so callers can handle
     throw err;
   }
@@ -102,7 +102,13 @@ export function hashPassword(password: string) {
 
 export function verifyPassword(password: string, salt: string, hash: string) {
   const derivedKey = scryptSync(password, salt, 64);
-  return derivedKey.toString("hex") === hash;
+  const hashBuffer = Buffer.from(hash, "hex");
+  // Use constant-time comparison to prevent timing attacks
+  try {
+    return timingSafeEqual(derivedKey, hashBuffer);
+  } catch {
+    return false;
+  }
 }
 
 export async function addSubscriber(input: {
@@ -136,6 +142,7 @@ export async function addSubscriber(input: {
       existing.passwordSalt = salt;
       existing.passwordHash = hash;
     }
+    await writeSubscribers(subscribers);
     return existing;
   }
 
