@@ -58,7 +58,7 @@ export default function ContactPage() {
             <div className="mb-6 flex justify-center">
               <div className="relative h-16 w-16 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
                 <Image
-                  src="/brand/logo.jpeg"
+                  src="/olmem-tech-logo.png"
                   alt="OLMEM Contractor CMS"
                   fill
                   className="object-contain p-2"
